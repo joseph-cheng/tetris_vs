@@ -117,7 +117,7 @@ class Player:
         elif direction == "y":
         #Touching top
             collision_depth = 0
-            if self.y_vel > 0:
+            if self.y_vel >= 0:
                 collision_depth = other_rect.top - self.rect.bottom
                 
             #Touching bottom

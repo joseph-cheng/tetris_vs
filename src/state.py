@@ -1,6 +1,7 @@
 from board import Board
 from piece import Piece
 from player import Player
+from colour import Colour
 import random
 
 class State:
@@ -32,6 +33,7 @@ class State:
 
         self.movement = 0
         self.counter = State.MOVE_DELAY
+
 
 
 
@@ -85,6 +87,15 @@ class State:
                 for other_row_num in range(row_num-1, -1, -1):
 
                     self.board.board[other_row_num+1] = self.board.board[other_row_num][:]
+
+    def generate_junk_lines(self, num_of_junk_lines):
+        for row_num in range(num_of_junk_lines, self.board.h):
+            self.board.board[row_num-num_of_junk_lines] = self.board.board[row_num][:]
+            
+        for row_num in range(self.board.h-num_of_junk_lines, self.board.h):
+            empty_pos = random.randint(0,self.board.w-1)
+            self.board.board[row_num] = [0 if _ == empty_pos else random.randint(1, len(Colour)-1) for _ in range(self.board.w)]
+            
 
     def update(self):
 

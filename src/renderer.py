@@ -63,7 +63,6 @@ class Renderer:
                               self.cell_width-1,
                               self.cell_height-1))
 
-        pygame.draw.rect(self.screen, (100,100,100), state_obj.player.rect)
         pygame.draw.circle(self.screen, (255,255,255), (int(state_obj.player.x), int(state_obj.player.y)), state_obj.player.radius, 1)
         
         #render next pieces
