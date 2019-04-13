@@ -18,10 +18,11 @@ class Player:
 
         self.left_down = False
         self.right_down = False
+        self.on_wall = False
+        self.on_floor = False
         
 
     def update(self, state_obj):
-
         self.apply_force([40 * self.right_down - 40*self.left_down,0])
 
         self.x += self.x_vel * state_obj.T + 0.5 * self.x_accel * state_obj.T**2
@@ -35,10 +36,12 @@ class Player:
         if self.x + self.radius > state_obj.w:
             self.x = state_obj.w-self.radius
             self.x_vel = 0
+            self.on_wall = True
             
         elif self.x - self.radius < 0:
             self.x = self.radius
             self.x_vel = 0
+            self.on_wall = True
 
 
 
@@ -109,6 +112,8 @@ class Player:
             #Touching right
             elif self.x_vel < 0:
                 collision_depth = other_rect.right-self.rect.left
+                
+            self.on_wall = True
 
             self.x_vel = 0
             self.x += collision_depth
@@ -119,6 +124,7 @@ class Player:
             collision_depth = 0
             if self.y_vel >= 0:
                 collision_depth = other_rect.top - self.rect.bottom
+                self.on_floor = True
                 
             #Touching bottom
             elif self.y_vel < 0:
