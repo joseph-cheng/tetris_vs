@@ -34,6 +34,8 @@ class State:
         self.movement = 0
         self.counter = State.MOVE_DELAY
 
+        self.generate_junk_lines(self.board.h//2)
+
 
 
 

@@ -37,7 +37,7 @@ def key_callback(state_obj):
 
                 can_move = True
                 for block in state_obj.current_piece.blocks:
-                    if block[0] == state_obj.board.w or state_obj.board.board[block[1]][block[0]+1] != 0:
+                    if block[0] == state_obj.board.w-1 or state_obj.board.board[block[1]][block[0]+1] != 0:
                         can_move = False
 
                 if can_move:
@@ -60,7 +60,6 @@ def key_callback(state_obj):
                         state_obj.current_piece.rotate(1)
                         break
 
-                state_obj.generate_junk_lines(2)
             
             elif event.key == pygame.K_s:
                 state_obj.current_step = state_obj.fast_step
