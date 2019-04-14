@@ -8,6 +8,8 @@ class Renderer:
         self.h = h
         self.board_w = board_w
         self.board_h = board_h
+        self.board_offset_x = (w-board_w)//2
+        self.board_offset_y = (h-board_h)//2
         self.cell_width = self.board_w // board_cells_w
         self.cell_height = self.board_h // board_cells_h
         self.screen = pygame.display.set_mode((w,h))
@@ -28,8 +30,8 @@ class Renderer:
             for col_num, cell in enumerate(row):
                 pygame.draw.rect(self.screen,
                                  self.colour_dict[cell],
-                                 (col_num*self.cell_width+1,
-                                  row_num*self.cell_height+1,
+                                 (col_num*self.cell_width+1+self.board_offset_x,
+                                  row_num*self.cell_height+1+self.board_offset_y,
                                   self.cell_width-1,
                                   self.cell_height-1))
 
@@ -49,43 +51,45 @@ class Renderer:
         for block in state_obj.current_piece.blocks:
             #draw shadow
             pygame.draw.rect(self.screen,
-                             tuple(col*0.5 for col in self.colour_dict[state_obj.current_piece.colour.value]),
-                             (block[0]*self.cell_width+1,
-                              (block[1]+minimum_distance_down)*self.cell_height+1,
+                             tuple(col*0.3 for col in self.colour_dict[state_obj.current_piece.colour.value]),
+                             (block[0]*self.cell_width+1+self.board_offset_x,
+                              (block[1]+minimum_distance_down)*self.cell_height+1+self.board_offset_y,
                               self.cell_width-1,
                               self.cell_height-1))
 
             #draw block
             pygame.draw.rect(self.screen,
                              self.colour_dict[state_obj.current_piece.colour.value],
-                             (block[0]*self.cell_width+1,
-                              block[1]*self.cell_height+1,
+                             (block[0]*self.cell_width+1+self.board_offset_x,
+                              block[1]*self.cell_height+1+self.board_offset_y,
                               self.cell_width-1,
                               self.cell_height-1))
 
-        pygame.draw.circle(self.screen, (255,255,255), (int(state_obj.player.x), int(state_obj.player.y)), state_obj.player.radius, 1)
+        pygame.draw.circle(self.screen, (255,255,255), (int(state_obj.player.x)+self.board_offset_x, int(state_obj.player.y)+self.board_offset_y), state_obj.player.radius, 1)
         
         #render next pieces
-        self.render_piece(state_obj.block_pool[0], [self.board_w+75, 50])
+        self.render_piece(state_obj.block_pool[0], [self.board_offset_x + self.board_w//2, self.board_offset_y//2])
 
         #render held piece
         if state_obj.held_piece_shape:
-            self.render_piece(state_obj.held_piece_shape, [self.board_w//2-50, self.board_h+50])
+            self.render_piece(state_obj.held_piece_shape, [self.board_offset_x+self.board_w//2, self.board_h+self.board_offset_y+60])
 
         #draw border
         pygame.draw.rect(self.screen,
                          (128,128,128),
-                         (0,0, self.board_w+4, self.board_h+4), 5)
+                         (self.board_offset_x-4,self.board_offset_y-4, self.board_w+8, self.board_h+8), 5)
         
         pygame.display.flip()
 
     def render_piece(self, piece_shape, pos):
-        p = Piece(piece_shape, pos[0]//self.cell_width, pos[1]//self.cell_height)
+        
+        p = Piece(piece_shape, 0, 0)
+        piece_centre = [(p.centre[0]+0.5)*self.cell_width, (p.centre[1]+0.5)*self.cell_height]
         for block in p.blocks:
             pygame.draw.rect(self.screen,
                                  self.colour_dict[p.colour.value],
-                                 (block[0]*self.cell_width+1,
-                                  block[1]*self.cell_height+1,
+                                 (block[0]*self.cell_width-piece_centre[0] + pos[0]+1,
+                                  block[1]*self.cell_height-piece_centre[1] + pos[1]+1,
                                   self.cell_width-1,
                                   self.cell_height-1))
 

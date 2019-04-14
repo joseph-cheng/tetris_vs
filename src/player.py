@@ -79,7 +79,11 @@ class Player:
         if self.y + self.radius > state_obj.h:
             self.y = state_obj.h-self.radius
             self.y_vel = 0
-
+            print("PLATFORMER LOSES")
+            self.on_floor = True
+        elif self.y - self.radius < 0:
+            self.y = self.radius
+            self.y_vel = 0
 
         for row_num,row in enumerate(state_obj.board.board):
             for col_num, cell in enumerate(row):

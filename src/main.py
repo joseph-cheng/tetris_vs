@@ -2,8 +2,8 @@ import pygame
 from state import State
 from renderer import Renderer
 
-screen_w = 500
-screen_h = 700
+screen_w = 600
+screen_h = 800
 board_tiles_w = 10
 board_tiles_h = 20
 board_screen_w = 300
@@ -83,15 +83,16 @@ def key_callback(state_obj):
                 if state_obj.player.on_floor or state_obj.player.on_wall:
                     state_obj.player.y_vel = 0
                     x_force = 0
+                    y_force = -200
                     if state_obj.player.on_wall:
                         if state_obj.player.left_down:
                             x_force += 500
-                        if state_obj.player.right_down:
+                        elif state_obj.player.right_down:
                             x_force -= 500
                     state_obj.player.on_wall = False
                     state_obj.player.on_floor = False
 
-                    state_obj.player.apply_force([x_force,-200])
+                    state_obj.player.apply_force([x_force,y_force])
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_s:
