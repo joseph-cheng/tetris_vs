@@ -62,13 +62,7 @@ class Player:
                                         cell_height)
                 if self.rect.colliderect(cell_rect):
                     self.resolve_collision(cell_rect, "x")
-        for block in state_obj.current_piece.blocks:
-            cell_rect = pygame.Rect(block[0]*cell_width,
-                                    block[1]*cell_height,
-                                    cell_width,
-                                    cell_height)
-            if self.rect.colliderect(cell_rect):
-                self.resolve_collision(cell_rect, "x")
+
 
         self.apply_force([0,self.mass*9.8])
 
@@ -101,13 +95,7 @@ class Player:
                                         cell_height)
                 if self.rect.colliderect(cell_rect):
                     self.resolve_collision(cell_rect, "y")
-        for block in state_obj.current_piece.blocks:
-            cell_rect = pygame.Rect(block[0]*cell_width,
-                                    block[1]*cell_height,
-                                    cell_width,
-                                    cell_height)
-            if self.rect.colliderect(cell_rect):
-                self.resolve_collision(cell_rect, "y")
+
 
 
     def apply_force(self, force):
