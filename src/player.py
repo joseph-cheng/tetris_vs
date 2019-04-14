@@ -6,6 +6,9 @@ class Player:
         self.y = y
         self.x_vel = 0
         self.y_vel = 0
+
+        self.max_y_vel = 100
+        
         self.x_accel = 0
         self.y_accel = 0
 
@@ -18,7 +21,8 @@ class Player:
 
         self.left_down = False
         self.right_down = False
-        self.on_wall = False
+        self.on_right_wall = False
+        self.on_left_wall = False
         self.on_floor = False
         
 
@@ -32,16 +36,17 @@ class Player:
         
         self.x_accel = 0
 
-        #Touching either side
+        #Touching right boundary
         if self.x + self.radius > state_obj.w:
             self.x = state_obj.w-self.radius
             self.x_vel = 0
-            self.on_wall = True
-            
+            self.on_right_wall = True
+
+        #touching left boundary
         elif self.x - self.radius < 0:
             self.x = self.radius
             self.x_vel = 0
-            self.on_wall = True
+            self.on_left_wall = True
 
 
 
@@ -63,10 +68,15 @@ class Player:
                 if self.rect.colliderect(cell_rect):
                     self.resolve_collision(cell_rect, "x")
 
-
+        if self.on_right_wall or self.on_left_wall:
+            self.max_y_vel = 10
+        else:
+            self.max_y_vel = 100
         self.apply_force([0,self.mass*9.8])
-
-
+        
+        if abs(self.y_vel) > self.max_y_vel:
+            self.apply_force([0, -self.y_vel/abs(self.y_vel) * self.mass * 20])
+            
         self.y += self.y_vel * state_obj.T + 0.5 * self.y_accel * state_obj.T**2
 
         self.y_vel = (self.y_vel + self.y_accel * state_obj.T)
@@ -112,12 +122,13 @@ class Player:
             collision_depth = 0
             if self.x_vel > 0:
                 collision_depth = other_rect.left - self.rect.right
+                self.on_right_wall = True
 
             #Touching right
             elif self.x_vel < 0:
                 collision_depth = other_rect.right-self.rect.left
-                
-            self.on_wall = True
+                self.on_left_wall = True
+            
 
             self.x_vel = 0
             self.x += collision_depth

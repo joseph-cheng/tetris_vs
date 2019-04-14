@@ -75,21 +75,21 @@ def key_callback(state_obj):
 
             elif event.key == pygame.K_LEFT:
                 state_obj.player.left_down = True
-                state_obj.player.on_wall = False
+                state_obj.player.on_right_wall = False
             elif event.key == pygame.K_RIGHT:
                 state_obj.player.right_down = True
-                state_obj.player.on_wall = False
+                state_obj.player.on_left_wall = False
             elif event.key == pygame.K_UP:
-                if state_obj.player.on_floor or state_obj.player.on_wall:
+                if state_obj.player.on_floor or state_obj.player.on_right_wall or state_obj.player.on_left_wall:
                     state_obj.player.y_vel = 0
                     x_force = 0
                     y_force = -200
-                    if state_obj.player.on_wall:
-                        if state_obj.player.left_down:
-                            x_force += 500
-                        elif state_obj.player.right_down:
-                            x_force -= 500
-                    state_obj.player.on_wall = False
+                    if state_obj.player.on_left_wall:
+                        x_force += 500
+                    elif state_obj.player.on_right_wall:
+                        x_force -= 500
+                    state_obj.player.on_right_wall = False
+                    state_obj.player.on_left_wall = False
                     state_obj.player.on_floor = False
 
                     state_obj.player.apply_force([x_force,y_force])
