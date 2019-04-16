@@ -35,7 +35,7 @@ class Player:
         self.x_vel = (1-self.damping) * (self.x_vel + self.x_accel * state_obj.T)
         
         self.x_accel = 0
-
+        
         #Touching right boundary
         if self.x + self.radius > state_obj.w:
             self.x = state_obj.w-self.radius
@@ -48,6 +48,8 @@ class Player:
             self.x_vel = 0
             self.on_left_wall = True
 
+        self.on_right_wall = self.on_right_wall and self.right_down
+        self.on_left_wall = self.on_left_wall and self.left_down
 
 
         
